@@ -4,7 +4,7 @@ import { Brain } from 'lucide-react';
 function Navbar() {
     return (
         // Sticky aur top-0 add kiya taaki yeh top par fix rahe
-        <nav className='bg-gradient-to-r from-gray-500 to-black-500 shadow-sm border-b border-gray-200 sticky top-0 z-50'>
+        <nav className='bg-linear-to-r from-gray-500 to-black-500 shadow-sm border-b border-gray-200 sticky top-0 z-50'>
             <div className='w-full  px-4 sm:px-6 lg:px-12'>
 
                 {/* Flex container items ko horizontal row mein arrange karne ke liye */}
@@ -20,7 +20,7 @@ function Navbar() {
                     <div className='flex space-x-4'>
                         <Link
                             to="/login"
-                            className='border-2 rounded-lg text-gray-600 bg-green-500 border-gray-600 hover:bg-taupe-800 text-white px-4 py-2 font-medium transition-all'
+                            className='border-2 rounded-lg text-gray-600 bg-green-500 border-gray-600 hover:bg-taupe-800 px-4 py-2 font-medium transition-all'
                         >
                             Login
                         </Link>

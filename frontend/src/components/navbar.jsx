@@ -13,7 +13,7 @@ function Navbar() {
                     {/* Logo aur Title ek group mein */}
                     <div className='flex items-center text-white'>
                         <Brain className='mr-2 h-7 w-7' />
-                        <Link to="/" className='font-bold text-xl tracking-wide hover:text-zinc-950'>AI Resume Analyzer</Link>
+                        <Link to="/" className='font-bold text-xl tracking-wide hover:text-zinc-950'>NexAI</Link>
                     </div>
 
                     {/* Login / Signup Buttons */}

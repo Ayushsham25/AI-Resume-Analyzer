@@ -21,7 +21,7 @@ const signup = () => {
 
             {/* 2. Dark Overlay */}
             <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
-            <div>
+            <div >
                 {/* 3. Your Content (Ab parent container ke ANDAR hai aur z-20 lagaya hai) */}
                 <div className="relative z-20 p-8 text-center ">
                     <div className=' border-4 border-dark-400 rounded-xl w-150 h-130 mt-14 flex flex-col items-center justify-center ml-110 backdrop-blur-sm  '>

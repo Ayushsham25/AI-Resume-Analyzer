@@ -1,24 +1,27 @@
-
 import React, { useState } from 'react';
 import bgVideoHome from '../assets/homepage.mp4';
-import { Brain, Upload, Key, Briefcase, Layout, Zap, CheckCircle, Waves } from "lucide-react";
+import { Brain, Upload, Layout } from "lucide-react";
 
 const Home = () => {
-
-    const [files, setFile] = useState(null);
+    const [file, setFile] = useState(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisData, setAnalysisData] = useState(null);
 
-    // stimulating uplaod And Gemini api call
-
+    // Simulating upload and API call
     const handleFileUpload = (e) => {
         e.preventDefault();
+        
+        // Actually capture the file from the input
+        if (e.target.files && e.target.files[0]) {
+             setFile(e.target.files[0]);
+        }
+        
         setIsAnalyzing(true);
 
-        //  Api delay
+        // API delay simulation
         setTimeout(() => {
             setIsAnalyzing(false);
-            //  mock Data
+            // Mock Data
             setAnalysisData({
                 scores: {
                     overall: 8.4,
@@ -38,15 +41,11 @@ const Home = () => {
                     { title: "Update Contact Links", desc: "Ensure your LinkedIn and Portfolio links are hyperlinked and up to date for modern recruitment workflows." }
                 ]
             });
-
         }, 2000);
     };
 
-
-
     return (
-        // Fragment <></> hata diya kyunki ab ek hi parent div hai
-        <div className="relative w-full h-full min-h-[calc(100vh-64px)] flex flex-col items-center justify-center overflow-hidden  px-4 sm:px-6 lg:px-12">
+        <div className="relative w-full h-full min-h-[calc(100vh-64px)] flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-12">
 
             {/* 1. The Background Video */}
             <video
@@ -56,7 +55,6 @@ const Home = () => {
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-cover z-0"
             >
-                {/* Dhyan dein: Agar video public folder mein hai, toh path '/' se shuru hona chahiye */}
                 <source src={bgVideoHome} type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
@@ -64,55 +62,133 @@ const Home = () => {
             {/* 2. Dark Overlay */}
             <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
 
-            {/* 3. Your Content (Ab parent container ke ANDAR hai aur z-20 lagaya hai) */}
-            <div className="relative z-20 ">
-
-                <main className=' max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8'>
+            {/* 3. Your Content */}
+            <div className="relative z-20 w-full">
+                <main className='max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8'>
 
                     {/* hero section */}
-                    <div className=" grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16 backdrop-blur-sm  ">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mb-16 backdrop-blur-sm">
+                        
+                        {/* Left Column: Intro and Upload */}
                         <div>
-                            <h1 className=' text-5xl font-extrabold text-[#60a5fa] leading-tight mb-4'> NexAI  <br />
-                                <span className=" italic text-slate-950 font-normal text-2xl ">An AI-powered tool that parses, evaluates, and scores resumes against job descriptions for optimal ATS compatibility.</span>
+                            <h1 className='text-5xl font-extrabold text-[#60a5fa] leading-tight mb-4'> 
+                                NexAI <br />
+                                <span className="italic text-slate-100 font-normal text-2xl">
+                                    An AI-powered tool that parses, evaluates, and scores resumes against job descriptions for optimal ATS compatibility.
+                                </span>
                             </h1>
 
-                            <div className=' flex items-center space-x-3 text-sm text-gray-500'>
-                                <div className=' flex -space-x-2 pb-[25px] pl-[50px]'>
+                            <div className='flex flex-col space-y-8 mt-8 text-sm text-gray-500'>
+                                
+                                <div className='flex items-center -space-x-2'>
                                     <div className='h-10 w-10 rounded-full bg-white border-2 border-gray-200 overflow-hidden flex items-center justify-center'>
-                                        < Brain />
+                                        <Brain />
                                     </div>
-                                    <span className=' pl-[20px] pt-[5px] pr-[30px] text-xl text-slate-950'>Powered by Gemini</span>
+                                    <span className='pl-6 text-xl text-slate-100'>Powered by Gemini</span>
                                 </div>
 
-                                {/* 2) upload Dropzone */}
-
-                                <div className='ml-100 mb-10 bg-slate-400 p-20 rounded-2xl shadow-sm- border border-gray-100 flex flex-col items-center justify-center text-center min-h-[300px]'>
-                                    <div className=' w-80 h-30  bg-blue-50 rounded-full flex items-center justify-center mb-4'>
-
-                                        <Upload className=' w-7 h-7 mr-2 text-blue-500' />
-
-                                        <h3 className=' text-md font-bold mb-1 ml-2'>Upload Resume<br />PDF Only Max 10MB    <br /></h3>
-                                        <label className=' bg-[#1e3a8a]  text-white ml-3 mr-3 pl-4 pr-4 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-900 transition font-medium'>Select File
+                                {/* Upload Dropzone */}
+                                <div className='bg-slate-400/20 backdrop-blur-md p-10 rounded-2xl shadow-sm border border-gray-100/20 flex flex-col items-center justify-center text-center min-h-[250px] w-full max-w-md'>
+                                    <div className='w-full flex flex-col items-center justify-center mb-4'>
+                                        <Upload className='w-10 h-10 mb-4 text-blue-400' />
+                                        <h3 className='text-lg text-white font-bold mb-4'>
+                                            Upload Resume<br />
+                                            <span className='text-sm font-normal text-slate-200'>PDF Only Max 10MB</span>
+                                        </h3>
+                                        
+                                        <label className='bg-[#1e3a8a] text-white px-6 py-3 rounded-md cursor-pointer hover:bg-blue-900 transition font-medium shadow-lg'>
+                                            {file ? file.name : "Select File"}
                                             <input type="file" accept=".pdf" className='hidden' onChange={handleFileUpload} />
                                         </label>
-                                        {isAnalyzing && <p className="mt-4 mr-2 text-sm text-blue-600 font-medium animate-pulse">Analyzing with Gemini</p>}
-
-
-
+                                        
+                                        {isAnalyzing && (
+                                            <p className="mt-6 text-md text-blue-300 font-medium animate-pulse">
+                                                Analyzing with Gemini...
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
+
+                        {/* Right Column: Analyzing Dashboard (Conditionally Rendered) */}
+                        <div>
+                            {analysisData && (
+                                <div className='animate-fade-in-up bg-transparent p-8 rounded-2xl shadow-xl space-y-6'>
+                                    <h2 className='text-2xl font-bold text-[#0043fc] border-b-2 border-[#0044ff] inline-block pb-1'>
+                                        Analysis Dashboard
+                                    </h2>
+                                    
+                                    {/* Top metric grid */}
+                                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+                                        
+                                        {/* Overall Score Card */}
+                                        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center'>
+                                            <p className='text-gray-500 text-sm font-medium mb-2'>Overall Score</p>
+                                            <p className='text-4xl font-extrabold text-blue-600'>{analysisData.scores.overall}/10</p>
+                                        </div>
+
+                                        {/* Keywords Score Card */}
+                                        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center'>
+                                            <p className='text-gray-500 text-sm font-medium mb-2'>Keywords</p>
+                                            <p className='text-4xl font-extrabold text-green-500'>{analysisData.scores.keywords}/10</p>
+                                        </div>
+
+                                        {/* Formatting Card */}
+                                        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100'>
+                                            <div className='flex justify-between items-center mb-4'>
+                                                <Layout className='w-5 h-5 text-[#1e3a8a]' />
+                                                <span className='text-xs font-bold text-gray-400 uppercase'>Formatting</span>
+                                            </div>
+                                            <div className='flex items-end space-x-2 mb-2'>
+                                                <span className='text-4xl font-extrabold text-blue-600 pl-12 pt-8'>
+                                                    {analysisData.scores.formatting}/10
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* AI Insight Card */}
+                                        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100'>
+                                            <div className='flex justify-between items-center mb-4'>
+                                                <Brain className='w-5 h-5 text-[#1e3a8a]' />
+                                                <span className='text-xs font-bold text-gray-400 uppercase'>AI Insight</span>
+                                            </div>
+                                            <div className='flex items-end space-x-2'>
+                                                <p className='text-sm font-medium text-gray-700'>
+                                                    {analysisData.insight}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+                                    {/* Improvement Suggestions */}
+                                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mt-6">
+                                        <h3 className="text-xl font-bold text-[#1e3a8a] mb-6">Improvement Suggestions</h3>
+                                        <div className="space-y-6">
+                                            {analysisData.improvements.map((item, idx) => (
+                                                <div key={idx} className="flex space-x-4">
+                                                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                                        <span className="font-bold text-blue-600 text-sm">{idx + 1}</span>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-[#1e3a8a] text-md">{item.title}</h4>
+                                                        <p className="text-gray-600 text-sm mt-1 leading-relaxed">{item.desc}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            )}
+                        </div>
+
                     </div>
-
                 </main>
-            </div >
-        </div >
-
-
+            </div>
+        </div>
     );
 };
 
-export default Home 
+export default Home;

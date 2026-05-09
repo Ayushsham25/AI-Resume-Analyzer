@@ -60,7 +60,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get('/' , (req, res)=>{
 res.send('welcome to my Project');
-}
+})
 
 app.get('/home', (req, res)=>{
       res.send('welcome to home page');

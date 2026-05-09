@@ -31,7 +31,7 @@ for (let [key, value] of formData.entries()) {
 
         try{
            
-            const res = await axios.post('https://ai-resume-analyzer-94pt.onrender.com/api/upload', formData, {
+            const res = await axios.post('hhttp://localhost:4110/api/upload', formData, {
                withCredentials: true
             });
 

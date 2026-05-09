@@ -2,8 +2,65 @@ import React from 'react'
 import bgVideo from '../assets/bg-video.mp4';
 import "tailwindcss";
 import { Brain, User, KeyRound, Mail } from 'lucide-react';
+import { useState } from 'react';  
+import axios from 'axios'; 
+import {useNavigate} from 'react-router-dom';
 
-const signup = () => {
+// tracking form data and sending to backend
+const signup = () =>{
+
+    // 1 state to store form data
+    const [formData, setFormData] = useState({
+        username:'',
+        gmail:'',
+        password:'',
+    });
+
+    // navigation hook
+    const navigate = useNavigate();
+
+// tracking input fields of form
+
+const handleChnage = (e) =>{
+    const {name, value} = e.target;
+    setFormData((prevFormData)=>({
+        ...prevFormData,
+        [name]: value,
+    }));
+};
+
+// handling submit
+ const handleSubmit = async (e) =>{
+    e.preventDefault();
+
+    try {
+        const response =  await axios.post('http://localhost:4110/api/signup', formData);
+        
+
+        // redirecting to login page after successful signup
+        if(response.status === 200){
+            alert('signup successful');
+            navigate('/login');
+        }
+    //    console log ko remove karna hai
+        // console.log({formData});
+
+        setFormData({ username:'', gmail:'', password:'',});
+   } catch (error) {
+        if (error.response && error.response.data) {
+            console.log("🔥 ASLI ERROR YAHAN HAI:", error.response.data);
+            alert(error.response.data.message || "Validation Error!");
+        } else {
+            // Yahan se error.response.data hata diya hai kyunki network error me wo nahi hota
+            console.error("System Error:", error.message);
+            alert("Network connection check karein!");
+        }
+    }
+
+ };
+
+
+
     return (
         <>
             {/* 1. The Background Video */}
@@ -32,20 +89,31 @@ const signup = () => {
                         <br />
                         <br />
 
+                        {/* input feilds */}
+                          <form >
                         <label className='text-xl text-gray-500 mr-70 flex items-center justify-center gap-4'>{<User className='h-6 w-6  ' />}Enter username</label>
-                        <input type="text" placeholder="Enter username"
+                        <input type="text" placeholder="Enter username" name='username' value={formData.username}  required 
+                               onChange={handleChnage}
+
                             className=' text-white h-10 w-119 p-5 mt-2 border-2 border-gray-500 rounded-md'
                         ></input>
 
                         <label className='text-xl text-gray-500 mr-78 flex items-center justify-center gap-4 mt-5'>{<Mail className='h-6 w-6  ' />}Enter Gmail</label>
-                        <input type="text" placeholder="Enter Gmail"
+                        <input type="text" placeholder="Enter Gmail" name='gmail' value={formData.gmail} required 
+                               onChange={handleChnage}
                             className='text-white h-10 w-119 p-5 mt-2 border-2 border-gray-500 rounded-md'
                         ></input>
 
                         <label className='text-xl text-gray-500 mr-70 flex items-center justify-center gap-4 mt-5'>{<KeyRound className='h-6 w-6  ' />}Enter Password</label>
-                        <input type="password" placeholder="Enter username"
+                        <input type="password" placeholder="Enter password atleast 6 characters" name='password' value={formData.password}   required
+                            onChange={handleChnage}
+
                             className='text-white h-10 w-119 p-5 mt-2 border-2 border-gray-500 rounded-md'
                         ></input>
+
+                        <button className='bg-blue-500 text-white w-120 px-4 py-2 mt-6 rounded-md hover:bg-blue-600 transition-colors duration-300'
+                        onClick={handleSubmit}>Sign Up</button>
+                    </form>
                     </div>
                 </div>
 

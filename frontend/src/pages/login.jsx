@@ -1,8 +1,68 @@
 import React from 'react';
 import bgVideo from '../assets/bg-video.mp4';
 import { Brain, User, KeyRound, Mail } from 'lucide-react';
+import { useState } from 'react';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';   
+
+
+
 
 function Login() {
+
+// form data State
+const [formData, setFormData] = useState({
+    username:'',
+    password:'',
+})
+
+// navigation hook
+const navigate = useNavigate();
+
+// tracking input fields of form using handleChnage function
+
+const handleChnage = (e)=>{
+
+    const {name, value} = e.target;
+
+    setFormData((prevData)=>({
+        ...prevData,
+        [name]: value,
+    }));
+}
+
+// handle submit button using handleSubmit function
+
+const handleSubmit = async (e) =>{
+    e.preventDefault();
+
+    try{
+        
+        const response = await axios.post('http://localhost:4110/api/login', formData);
+
+        // handling response and navigaion
+        if(response.status ===200){
+            alert('login succesfull welcome ' + response.data.user.username);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            navigate('/home');
+        }
+    }
+    catch(error){
+        if(error.response){
+            alert(error.response.data.message || "Login failed!");
+        }
+        else{
+            console.error("network error please check your connection", error.message);
+            
+        }
+    }
+}
+
+
+
+
+
+
     return (
         <>
             {/* 1. The Background Video */}
@@ -32,19 +92,28 @@ function Login() {
                         <br />
 
                         <label className='text-xl text-gray-500 mr-70 flex items-center justify-center gap-4'>{<User className='h-6 w-6  ' />}Enter username</label>
-                        <input type="text" placeholder="Enter username"
+                        <input type="text" placeholder="Enter username" name='username' value={formData.username} onChange={handleChnage} required
                             className=' text-white h-10 w-119 p-5 mt-2 border-2 border-gray-500 rounded-md '
                         ></input>
 
                         <label className='text-xl text-gray-500 mr-70 flex items-center justify-center gap-4 mt-5'>{<KeyRound className='h-6 w-6  ' />}Enter Password</label>
-                        <input type="password" placeholder="Enter username"
+                        <input type="password" placeholder="Enter password" name='password' value={formData.password} onChange={handleChnage} required
                             className=' text-white h-10 w-119 p-5 mt-2 border-2 border-gray-500 rounded-md'
                         ></input>
-                    </div>
-                </div>
+                        <label className='text-sm text-gray-500 mr-68 flex items-center justify-center gap-4'> Minimum 6 characters Required</label>
 
 
-            </div>
+
+         <button
+          className=' w-120 h-10 mt-10 bg-green-900 rounded-md  hover:bg-green-400 hover:text-black '
+          onClick={handleSubmit}
+          >Login</button>
+     
+     </div>
+   </div>
+
+
+  </div>
         </>
     )
 }

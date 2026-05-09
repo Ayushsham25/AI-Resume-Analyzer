@@ -34,7 +34,7 @@ const handleChnage = (e) =>{
     e.preventDefault();
 
     try {
-        const response =  await axios.post('http://localhost:4110/api/signup', formData);
+        const response =  await axios.post('https://ai-resume-analyzer-94pt.onrender.com/api/signup', formData);
         
 
         // redirecting to login page after successful signup

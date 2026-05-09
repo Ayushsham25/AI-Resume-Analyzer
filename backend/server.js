@@ -58,9 +58,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // basic Routes
 
-app.get('/' , (req, res)=>{
-res.send('welcome to my Project');
-})
+
 
 app.get('/home', (req, res)=>{
       res.send('welcome to home page');

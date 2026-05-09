@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import bgVideoHome from '../assets/homepage.mp4';
 import { Brain, Upload, Layout } from "lucide-react";
+import axios from 'axios';
 
 const Home = () => {
     const [file, setFile] = useState(null);
@@ -8,40 +9,66 @@ const Home = () => {
     const [analysisData, setAnalysisData] = useState(null);
 
     // Simulating upload and API call
-    const handleFileUpload = (e) => {
-        e.preventDefault();
+    const handleFileUpload = async (e) => {
+       
+ 
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+       
+        if (!selectedFile) {
+        alert("select a file to upload");
+        return;
+    }
         
-        // Actually capture the file from the input
-        if (e.target.files && e.target.files[0]) {
-             setFile(e.target.files[0]);
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+for (let [key, value] of formData.entries()) {
+    console.log(`FormData Check -> ${key}:`, value);
+}
+
+           setIsAnalyzing(true);
+
+        try{
+           
+            const res = await axios.post('http://localhost:4110/api/upload', formData, {
+               withCredentials: true
+            });
+
+            setAnalysisData(res.data);
         }
-        
-        setIsAnalyzing(true);
+        catch(error){
+            console.error(error.message);
+        }
+        finally{
+            setIsAnalyzing(false);
+        }
+
 
         // API delay simulation
-        setTimeout(() => {
-            setIsAnalyzing(false);
-            // Mock Data
-            setAnalysisData({
-                scores: {
-                    overall: 8.4,
-                    keywords: 9.2,
-                    experience: 7.8,
-                    formatting: 8.1
-                },
-                insight: "Strengthen your executive summary by highlighting your leadership in multi-cloud migrations. This is a high-priority keyword for your target roles.",
-                strengths: [
-                    { title: "Action-Oriented Verbs", desc: "Strong usage of 'led', 'architected', and 'spearheaded'." },
-                    { title: "Technical Density", desc: "Balanced skill stack representation across all sections." },
-                    { title: "Visual Hierarchy", desc: "Effective use of bolding for key professional milestones." }
-                ],
-                improvements: [
-                    { title: "Quantify Achievement Data", desc: "Instead of 'Managed a large team,' try 'Managed a cross-functional team of 25+ engineers, resulting in a 15% increase in sprint velocity.'" },
-                    { title: "Optimize Executive Summary", desc: "Reduce the length of your summary from 5 lines to 3 high-impact sentences focused on your unique value proposition." },
-                    { title: "Update Contact Links", desc: "Ensure your LinkedIn and Portfolio links are hyperlinked and up to date for modern recruitment workflows." }
-                ]
-            });
-        }, 2000);
+    //     setTimeout(() => {
+    //         setIsAnalyzing(false);
+    //         // Mock Data
+    //         setAnalysisData({
+    //             scores: {
+    //                 overall: 8.4,
+    //                 keywords: 9.2,
+    //                 experience: 7.8,
+    //                 formatting: 8.1
+    //             },
+    //             insight: " Default - Strengthen your executive summary by highlighting your leadership in multi-cloud migrations. This is a high-priority keyword for your target roles.",
+    //             strengths: [
+    //                 { title: "Action-Oriented Verbs", desc: "Strong usage of 'led', 'architected', and 'spearheaded'." },
+    //                 { title: "Technical Density", desc: "Balanced skill stack representation across all sections." },
+    //                 { title: "Visual Hierarchy", desc: "Effective use of bolding for key professional milestones." }
+    //             ],
+    //             improvements: [
+    //                 { title: "Quantify Achievement Data", desc: "Instead of 'Managed a large team,' try 'Managed a cross-functional team of 25+ engineers, resulting in a 15% increase in sprint velocity.'" },
+    //                 { title: "Optimize Executive Summary", desc: "Reduce the length of your summary from 5 lines to 3 high-impact sentences focused on your unique value proposition." },
+    //                 { title: "Update Contact Links", desc: "Ensure your LinkedIn and Portfolio links are hyperlinked and up to date for modern recruitment workflows." }
+    //             ]
+    //         });
+    //     }, 200000); // 200 seconds delay to simulate real API processing time
     };
 
     return (
@@ -88,18 +115,21 @@ const Home = () => {
                                 </div>
 
                                 {/* Upload Dropzone */}
-                                <div className='bg-slate-400/20 backdrop-blur-md p-10 rounded-2xl shadow-sm border border-gray-100/20 flex flex-col items-center justify-center text-center min-h-[250px] w-full max-w-md'>
+                               
+                                <div className='bg-slate-400/20 backdrop-blur-md p-10 rounded-2xl shadow-sm border border-gray-100/20 flex flex-col items-center justify-center text-center min-h-62.5 w-full max-w-md'>
                                     <div className='w-full flex flex-col items-center justify-center mb-4'>
                                         <Upload className='w-10 h-10 mb-4 text-blue-400' />
-                                        <h3 className='text-lg text-white font-bold mb-4'>
+                                        <h3 className='text-lg text-white font-bold mb-10'>
                                             Upload Resume<br />
                                             <span className='text-sm font-normal text-slate-200'>PDF Only Max 10MB</span>
                                         </h3>
-                                        
-                                        <label className='bg-[#1e3a8a] text-white px-6 py-3 rounded-md cursor-pointer hover:bg-blue-900 transition font-medium shadow-lg'>
-                                            {file ? file.name : "Select File"}
-                                            <input type="file" accept=".pdf" className='hidden' onChange={handleFileUpload} />
-                                        </label>
+                                        <form  >
+                                            <label className='bg-[#1e3a8a] text-white px-18 py-8  rounded-md cursor-pointer hover:bg-blue-900 transition font-medium shadow-lg'>
+                                                {file ? file.name : "Select File"}
+                                                <input  type="file" accept=".pdf" className='hidden ' onChange={handleFileUpload} />
+                                            </label>
+                                        </form>
+                                            
                                         
                                         {isAnalyzing && (
                                             <p className="mt-6 text-md text-blue-300 font-medium animate-pulse">
@@ -107,7 +137,8 @@ const Home = () => {
                                             </p>
                                         )}
                                     </div>
-                                </div>
+                                </div>  
+                               
                             </div>
                         </div>
 
@@ -138,7 +169,7 @@ const Home = () => {
                                         <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100'>
                                             <div className='flex justify-between items-center mb-4'>
                                                 <Layout className='w-5 h-5 text-[#1e3a8a]' />
-                                                <span className='text-xs font-bold text-gray-400 uppercase'>Formatting</span>
+                                                <span className='text-xs mr-22 font-bold text-[#1e3a8a] uppercase'>Formatting</span>
                                             </div>
                                             <div className='flex items-end space-x-2 mb-2'>
                                                 <span className='text-4xl font-extrabold text-blue-600 pl-12 pt-8'>
@@ -151,11 +182,11 @@ const Home = () => {
                                         <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-100'>
                                             <div className='flex justify-between items-center mb-4'>
                                                 <Brain className='w-5 h-5 text-[#1e3a8a]' />
-                                                <span className='text-xs font-bold text-gray-400 uppercase'>AI Insight</span>
+                                                <span className='text-xs mr-25 font-bold text-[#1e3a8a] uppercase'>AI Insight</span>
                                             </div>
                                             <div className='flex items-end space-x-2'>
                                                 <p className='text-sm font-medium text-gray-700'>
-                                                    {analysisData.insight}
+                                                    {analysisData.aiQuickInsight}
                                                 </p>
                                             </div>
                                         </div>
@@ -166,14 +197,14 @@ const Home = () => {
                                     <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mt-6">
                                         <h3 className="text-xl font-bold text-[#1e3a8a] mb-6">Improvement Suggestions</h3>
                                         <div className="space-y-6">
-                                            {analysisData.improvements.map((item, idx) => (
+                                            {analysisData.improvementSuggestions.map((item, idx) => (
                                                 <div key={idx} className="flex space-x-4">
-                                                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                                         <span className="font-bold text-blue-600 text-sm">{idx + 1}</span>
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-[#1e3a8a] text-md">{item.title}</h4>
-                                                        <p className="text-gray-600 text-sm mt-1 leading-relaxed">{item.desc}</p>
+                                                        <p className="text-gray-600 text-sm mt-1 leading-relaxed">{item.description}</p>
                                                     </div>
                                                 </div>
                                             ))}

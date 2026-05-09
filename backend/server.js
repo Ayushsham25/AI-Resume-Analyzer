@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // REQUIRING MODULES PHASE
 const express = require('express');
 const cors = require('cors');
@@ -9,10 +11,11 @@ const passport = require('passport');
 const session = require('express-session');
 const { log } = require('console');
 const LocalStrategy = require('passport-local').Strategy;
+const upload = require('./services/fileUpload.js');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const {analyzeResume , analyzeResult} = require('./controllers/analyze.js');
 
 
-
-require('dotenv').config();
 
 // Middlewares
 app.use(cors({ 
@@ -111,6 +114,35 @@ app.post('/api/login', passport.authenticate('local'), (req, res)=>{
  
    });
 
+   //  file upload route
+
+   // final api
+app.post('/api/upload', upload.single('file'), analyzeResume);
+
+// pervious api for file upload with analyze resume function
+
+   // app.post('/api/upload', upload.single('file'), analyzeResume, (req, res)=>{
+   //    try{
+
+
+   //      console.log("Aaya hua Body:", req.body); // Text data yahan aana chahiye
+   //      console.log("Aayi hui File:", req.file); // File yahan aani chahiye
+
+
+   //      if (!req.file) {
+   //          return res.status(400).json({ message: "Please select a valid PDF file" });
+   //      }
+
+   //       console.log('file received:', req.file);
+   //       console.log(analyzeResult);
+   //       res.status(200).json(analyzeResume);
+      
+   //    }
+   //    catch(error){
+   //       console.error(error.message);
+   //       res.status(500).json({message: "internal server error"});
+   //    }
+   // })
 
 // port
 const port = process.env.PORT;

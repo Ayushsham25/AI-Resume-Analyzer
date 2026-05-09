@@ -38,7 +38,7 @@ const handleSubmit = async (e) =>{
 
     try{
         
-        const response = await axios.post('https://ai-resume-analyzer-94pt.onrender.com/api/login', formData);
+        const response = await axios.post('http://localhost:4110/api/login', formData);
 
         // handling response and navigaion
         if(response.status ===200){
